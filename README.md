@@ -9,7 +9,7 @@
 > ⚡️ **Установите Unity Hub за 1 клик в терминале (консоли) Linux:**  
 
 ```bash
-curl -L https://vex-ru.github.io/unityhub-install/install.sh | bash
+curl -L https://vex-ru.github.io/unity-install/install.sh | bash
 ```
 
 ![Unity Hub Interface](image.png)
