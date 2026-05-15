@@ -2,40 +2,35 @@
 
 # ============================================
 # Скрипт установки Unity Hub для Ubuntu/Debian
+# Автоматический запрос прав через sudo
 # ============================================
 
 set -e  # Прервать выполнение при ошибке
 
 echo "🚀 Начало установки Unity Hub..."
 
-# Проверка прав суперпользователя
-if [ "$EUID" -ne 0 ]; then 
-  echo "❌ Пожалуйста, запустите скрипт с правами root (sudo)"
-  exit 1
-fi
-
-# Проверка и установка curl при необходимости
+# Проверка наличия curl, установка при необходимости
 if ! command -v curl &> /dev/null; then
-    echo "📦 Установка curl..."
-    apt update -qq && apt install -y -qq curl
+    echo "📦 curl не найден. Установка..."
+    sudo apt update -qq && sudo apt install -y -qq curl
 fi
 
 # Создание директории для ключей
 echo "🔐 Настройка ключей репозитория..."
-install -d /etc/apt/keyrings
+sudo install -d /etc/apt/keyrings
 
 # Импорт публичного ключа подписи Unity
 echo "🔑 Добавление публичного ключа Unity..."
-curl -fsSL https://hub.unity3d.com/linux/keys/public | gpg --dearmor -o /etc/apt/keyrings/unityhub.gpg
+curl -fsSL https://hub.unity3d.com/linux/keys/public | sudo gpg --dearmor -o /etc/apt/keyrings/unityhub.gpg
 
 # Добавление репозитория Unity Hub (только для amd64)
 echo "📁 Добавление репозитория Unity Hub..."
-echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/unityhub.gpg] https://hub.unity3d.com/linux/repos/deb stable main" > /etc/apt/sources.list.d/unityhub.list
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/unityhub.gpg] https://hub.unity3d.com/linux/repos/deb stable main" | sudo tee /etc/apt/sources.list.d/unityhub.list
 
 # Обновление кэша пакетов и установка Unity Hub
 echo "⬇️ Обновление кэша пакетов и установка Unity Hub..."
-apt update -qq
-apt install -y -qq unityhub
+sudo apt update -qq
+sudo apt install -y -qq unityhub
 
 echo ""
 echo "✅ Unity Hub успешно установлен!"
